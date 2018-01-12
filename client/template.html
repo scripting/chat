@@ -1,0 +1,125 @@
+<html>
+	<head>
+		<title>[%title%]</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<script src="http://fargo.io/code/jquery-1.9.1.min.js"></script><link href="http://fargo.io/code/bootstrap.css" rel="stylesheet"><script src="http://fargo.io/code/bootstrap.min.js"></script><link rel="stylesheet" href="http://fargo.io/code/fontAwesome/css/font-awesome.min.css"/><link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet"><link href="https://fonts.googleapis.com/css?family=Rancho" rel="stylesheet"><script src="http://fargo.io/code/node/shared/utils.js"></script><script src="http://fargo.io/code/node/shared/alertdialog.js"></script><script src="http://fargo.io/code/node/shared/confirmdialog.js"></script><script src="http://fargo.io/code/node/shared/askdialog.js"></script><script src="http://fargo.io/code/strftime.js"></script><script src="http://fargo.io/code/shared/ga.js"></script><script src="http://fargo.io/code/shared/app.js"></script><script src="http://fargo.io/code/shared/menus.js"></script><link href="http://fargo.io/code/shared/menus.css" rel="stylesheet" type="text/css"><link href="http://fargo.io/code/shared/app.css" rel="stylesheet" type="text/css"><script src="http://fargo.io/code/shared/appprefs.js?x=2"></script><script src="http://fargo.io/code/shared/jBeep.min.js"></script><script src="http://fargo.io/code/shared/beep.js"></script>
+		<link href="https://fonts.googleapis.com/css?family=Ubuntu:400,500,700" rel="stylesheet">
+		<link href='http://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
+		<script src="http://fargo.io/code/browsers/outlinebrowser.js"></script>
+		<link href="http://fargo.io/code/browsers/outlinebrowser.css" rel="stylesheet" type="text/css">
+		
+		<script src="http://fargo.io/code/storage/api.js?x=0"></script>
+		<script src="http://fargo.io/code/shared/emojify.js"></script>
+		
+		<script src="http://cdn.jsdelivr.net/medium-editor/latest/js/medium-editor.min.js"></script>
+		<link rel="stylesheet" href="http://cdn.jsdelivr.net/medium-editor/latest/css/medium-editor.min.css" type="text/css" media="screen" charset="utf-8">
+		<link rel="stylesheet" href="http://fargo.io/code/editors/mediumeditor/dist/css/themes/default.css"> 
+		
+		<script src="http://scripting.com/chat/code/chatapp.js"></script>
+		<link href="http://scripting.com/chat/code/chatstyles.css" rel="stylesheet" type="text/css">
+		
+		<link href="http://scripting.com/chat/code/shellstyles.css" rel="stylesheet" type="text/css">
+		<script src="http://scripting.com/chat/code/shell.js"></script>
+		</head>
+	<body>
+		<div class="divMenubar" id="idMenubar">
+			<div class="topbar-wrapper">
+				<div class="navbar navbar-fixed-top" data-dropdown="dropdown">
+					<div class="divVersionNumber">
+						<span id="idVersionNumber"></span>
+						</div>
+					<div class="navbar-inner">
+						<div class="container">
+							<a class="brand" href="/"><span id="idMenuProductName"></span></a>
+							<ul class="nav" id="idMainMenuList">
+								<li class="dropdown" id="idMainMenu"> 
+									<a href="#" class="dropdown-toggle" data-toggle="dropdown">Menu&nbsp;<b class="caret"></b></a>
+									<ul class="dropdown-menu">
+										<li><a onclick="toggleJsonDisplayMode ();" id="idJsonMenuItem"></a></li>
+										<li><a href="http://emoji.codes/" target="_blank">Emoji codes..</a></li>
+										</ul>
+									</li>
+								<li class="dropdown" id="idDevMenu"> 
+									<a href="#" class="dropdown-toggle" data-toggle="dropdown">Dev&nbsp;<b class="caret"></b></a>
+									<ul class="dropdown-menu">
+										<li><a href="https://github.com/scripting/chat" target="_blank">On GitHub...</a></li>
+										<li><a href="https://www.npmjs.com/package/davechat" target="_blank">On NPM...</a></li>
+										<li class="divider"></li>
+										<li><a href="http://this.how/jsonChat/api.opml" target="_blank">API docs...</a></li>
+										</ul>
+									</li>
+								</ul>
+							<ul class="nav pull-right">
+								<li class="dropdown">
+									<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span id="idTwitterIcon"></span><span id="idTwitterUsername"></span>&nbsp;<b class="caret"></b></a>
+									<ul class="dropdown-menu">
+										<li><a onclick="aboutDialog ();">About <span id="idMenuAboutProductName"></span>...</a></li>
+										<li class="divider"></li>
+										<li><a onclick="settingsCommand ();">Settings...</a></li>
+										<li class="divider"></li>
+										<li><a onclick="twToggleConnectCommand ();" id="idTwitterConnectMenuItem"></a></li>
+										</ul>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		<div class="divSettingsDialog">
+			<div class="divPrefsDialog" comment="This is the Settings dialog.">
+				<div id="idPrefsDialog" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="windowTitleLabel" aria-hidden="true">
+					<div class="modal-body">
+						<div class="divDialogElements">
+							<code class="woRuntimeErrorMessage">Can't access the outline at "http://json.chat/code/settings.opml" because the remote server didn't find it.</code> 
+							</div>
+						</div>
+					<div class="modal-footer">
+						<a href="#" class="btn" onclick="prefsCloseDialog ();">Cancel</a>
+						<a href="#" class="btn btn-primary" onclick="prefsOkClicked ();">OK</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		<div class="divPageBody">
+			<div class="divMainColumn" id="idMainColumn" style="visibility: hidden;">
+				<div class="divAreaAboveTextBox" id="idAreaAboveTextBox" style="display: none;">
+					<button id="idTwitterButton"  class="btn btnTwitterLogin" type="button" onclick="toggleConnect ();" style="visibility: hidden;">&nbsp;</button>
+					<span class="spLeadingQuestion" id="idLeadingQuestion">
+						</span>
+					</div>
+				<div class="divEditorSection" id="idEditorSection" style="display: none;">
+					<div class="divTweetCheckbox">
+						<a href="#" rel="tooltip" data-placement="top" data-original-title="Echo messages to Twitter?"><input type="checkbox" class="inputEchoCheckbox"  id="idTweetCheckbox" name="flEchoPostsToTwitter" value="xxx"><span style="color: black;"> Echo <i class="fa fa-twitter" style="color: #4099FF;"></i></span></a>
+						</div>
+					<div class="divPrompt" id="idPrompt">
+						</div>
+					<div class="divBodyEditorContainer">
+						<div class="divBodyEditor" id="idBodyEditor">
+							</div>
+						</div>
+					<div class="divStuffThatsHiddenWhenNotActive" id="idStuffThatsHiddenWhenNotActive">
+						<div class="divPostButton">
+							<button id="idCancelButton" class="btn btnPost" type="button" style="visibility: hidden;"><i class="fa fa-close"></i> Cancel</button>
+							<button id="idPostButton" class="btn btnPost" type="button" style="visibility: visible;"><i class="fa fa-check"></i> Post</button>
+							</div>
+						<div class="divCharCount" id="idCharCount">
+							</div>
+						</div>
+					</div>
+				<div class="divChatlogViewer" id="idChatlogViewer">
+					</div>
+				<div class="divServerStats" id="idServerStats">
+					</div>
+				</div>
+			</div>
+		<script>
+			var globalConfig = [%config%];
+			globalConfig.version = "[%version%]";
+			$(document).ready (function () {
+				startup ();
+				});
+			</script>
+		</body>
+	</html>

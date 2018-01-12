@@ -1,0 +1,29 @@
+.divAreaAboveTextBox {
+	margin-bottom: 3px;
+	margin-left: 2px;
+	}
+.btnTwitterLogin {
+	float: right;
+	line-height: 130%;
+	cursor: pointer;
+	color: #777777;
+	display: none;
+	}
+.spLeadingQuestion {
+	font-size: 18px;
+	font-weight: bold;
+	line-height: 130%;
+	cursor: pointer;
+	color: #777777;
+	}
+.divToggleJsonDisplayMode {
+	padding: 5px;
+	}
+.divToggleJsonDisplayMode .btn {
+	cursor: pointer;
+	color: #777777;
+	width: 100px;
+	}
+ #idMenuProductName {
+	font-size: 40px;
+	}
