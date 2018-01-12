@@ -4,7 +4,7 @@ A simple extensible JavaScript chat network.
 
 ### All the pieces
 
-It can be confusing because there are a few pieces to this product.
+It can be confusing because there are a few pieces to this project.
 
 1. The server, a Node.js app. 
 
@@ -18,9 +18,21 @@ I have a demo server running at <a href="http://json.chat/">json.chat</a>.
 
 The name of the project, in total, in all its pieces, is called json.chat. 
 
+### The pointers you need
+
+1. How to <a href="https://github.com/scripting/chat/blob/master/docs/setup.md">set up</a> a server.
+
+2. How to <a href="https://github.com/scripting/chat/blob/master/docs/testing.md">test</a> a server.
+
+3. json.chat <a href="http://this.how/jsonchat/">howto</a> for users.
+
+4. Where to <a href="https://github.com/scripting/chat/issues/new">report</a> a problem.
+
 ### The story of json.chat
 
-I've written a number of JavaScript chat apps. But I never wrote one as a building block for chat apps. That was totally and easily extensible. That was designed as a JavaScript app, both on the client and server. That does all its communicating in JSON. Is totally hackable. All the components can be replaced. And while it is rooted in JavaScript, there's absolutely no reason  all the components can't be rewritten in different languages and runtimes.
+I've written a number of JavaScript chat apps. But I never wrote one as a building block to include in other apps, or even networks of apps. One that is totally and easily extensible. That was designed as a JavaScript app, both on the client and server. That does all its communicating in JSON. Is totally hackable. All the components can be replaced. And while it is rooted in JavaScript, there's absolutely no reason  all the components can't be rewritten in different languages and runtimes.
+
+I see this project as potentially like <a href="http://xmlrpc.scripting.com/">XML-RPC</a> in 1998, but with a user interface. A way of communicating that works at a developer level, but also has a user interface.
 
 ### Protocols
 
@@ -54,7 +66,19 @@ This folder contains a functional chat server. You should start with this folder
 
 ### Dependencies
 
+1. daveutils -- basic utilities.
 
+2. davehttp -- a high level interface for an HTTP server.
+
+3. davecache -- caching, not used at this time.
+
+4. davetwitter -- interface to Twitter functionality, builds on davehttp.
+
+5. davefilesystem -- higher level file system functions. 
+
+6. nodejs-websocket -- websockets server.
+
+7. request -- making HTTP requests.
 
 ### Docs
 
