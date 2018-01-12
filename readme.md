@@ -38,7 +38,7 @@ I see this project as potentially like <a href="http://xmlrpc.scripting.com/">XM
 
 There are two built-in interfaces, HTTP and WebSockets. The client sends messages to the server via HTTP. And the server calls back to the client via WebSockets.
 
-### Chatlog
+### Why "chatlog"
 
 Each document managed by a server is called a chatlog, because its primary application is chat, but it feels a lot like a weblog. 
 
