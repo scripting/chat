@@ -1,4 +1,4 @@
-## How to set up a server
+## How to set up a json.chat server
 
 1. Start with the example <a href="https://github.com/scripting/chat/tree/master/server">server</a>. Download all files, server.js, package.json and config.json. 
 
