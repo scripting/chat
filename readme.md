@@ -12,11 +12,11 @@ It can be confusing because there are a few pieces to this project.
 
 3. The client, a browser-based JavaScript app.
 
-The client is served when you go to the server's home page. The source code for the client is <a href="https://github.com/scripting/chat/blob/master/client/template.html">here</a>. You can replace it by specifying a different source in the config.json file on the server. Look for names encased in [%this%] syntax, and place them in your client, and then you'll know how to communicate with the server that launched you.
+The client is served when you go to the server's home page. The source code for the client is <a href="https://github.com/scripting/chat/blob/master/client/template.html">here</a>. You can replace it by specifying a different source in the config.json file on the server. 
 
 I have a demo server running at <a href="http://json.chat/">json.chat</a>. 
 
-The name of the project, in total, in all its pieces, is called json.chat. 
+The name of the project, total, in all its pieces, is called json.chat. 
 
 ### The pointers you need
 
@@ -24,7 +24,7 @@ The name of the project, in total, in all its pieces, is called json.chat.
 
 2. How to <a href="https://github.com/scripting/chat/blob/master/docs/testing.md">test</a> a server.
 
-3. json.chat <a href="http://this.how/jsonchat/">howto</a> for users.
+3.<a href="http://this.how/jsonchat/">Howto</a> for users.
 
 4. Where to <a href="https://github.com/scripting/chat/issues/new">report</a> a problem.
 
