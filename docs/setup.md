@@ -2,9 +2,7 @@
 
 1. Start with the example <a href="https://github.com/scripting/chat/tree/master/server">server</a>. Download all files, server.js, package.json and config.json. 
 
-2. Go to <a href="https://apps.twitter.com/">apps.twitter.com</a> and create a new app for your server, and paste the oauth values into config.json in place of the dummy values (they are random strings and don't work). The callback url should be in this form: 
-
-`http://yourserver.com:1402/callbackfromtwitter`
+2. Go to <a href="https://apps.twitter.com/">apps.twitter.com</a> and create a new app for your server, and paste the oauth values into config.json in place of the dummy values (they are random strings and don't work). The callback url should be in this form: <blockquote>`http://yourserver.com:1402/callbackfromtwitter`</blockquote>
 
 3. Decide which port you want to run the HTTP server on and the WebSockets server, and change the values in config.json accordingly.
 
