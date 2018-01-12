@@ -90,11 +90,13 @@ These are my immediate next steps for this project --
 
 2. Create apps that hook into the server, to drive the development of an API.
 
-3. RSS feeds.
+3. Testing and fixes for client use on phones and tablets. So far only tested in Chrome/Mac.
 
-4. Make it super easy to start new chatlogs on each server. It should be no harder than creating a new site on a blog hosting service.
+4. RSS feeds.
 
-5. A <i>sysop</i> menu (not sure what to call it) that only appears on the owner's machine. 
+5. Make it super easy to start new chatlogs on each server. It should be no harder than creating a new site on a blog hosting service.
+
+6. A <i>sysop</i> menu (not sure what to call it) that only appears on the owner's machine. 
 
 ### Known problems
 
