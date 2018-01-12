@@ -16,5 +16,5 @@
 
 ### Notes
 
-The first time you run it you may see error messages saying that certain files don't exist. This is fine, it creates the files it needs that don't exist. 
+The first time you run the server you may see error messages saying that certain files don't exist. This is fine, it creates the files it needs that don't exist. 
 
