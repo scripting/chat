@@ -28,7 +28,7 @@ There are two built-in interfaces, HTTP and WebSockets. The client sends message
 
 ### Chatlog
 
-Each document managed by a server is called a chatlog. Because its primary application is chat, but it feels a lot like a weblog. 
+Each document managed by a server is called a chatlog, because its primary application is chat, but it feels a lot like a weblog. 
 
 ### How the code is organized
 
