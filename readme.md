@@ -98,6 +98,8 @@ These are my immediate next steps for this project --
 
 6. A <i>sysop</i> menu (not sure what to call it) that only appears on the owner's machine. 
 
+At some point soon I will be taking a break to catch my breath and regain perspective. This was a pretty intense sprint. ;-)
+
 ### Known problems
 
 1. When I log on from my Twittergram account on my iPad, I get redirected to twitter.com. Doesn't happen when I log on via other accounts, or when I log on with that account in Safari on my Mac. 
