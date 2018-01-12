@@ -1,4 +1,4 @@
-var myVersion = "0.5.5", myProductName = "davechat"; 
+var myVersion = "0.5.6", myProductName = "davechat"; 
 
 exports.start = start;
 
@@ -423,10 +423,6 @@ function saveDataFile (f, jstruct, callback) {
 	function statsChanged () {
 		flStatsChanged = true;
 		}
-	function getMySocketUrl () {
-		var url = "ws://" + utils.stringNthField (config.twitter.myDomain, ":", 1) + ":" + config.websocketPort + "/";
-		return (url);
-		}
 	function readStats (callback) {
 		loadDataFile (config.fnameStats, function (err, jstruct) {
 			if (jstruct === undefined) { //force the initial file to be written
@@ -447,7 +443,7 @@ function saveDataFile (f, jstruct, callback) {
 		stats.version = myVersion;
 		stats.ctSockets = countOpenSockets ();
 		stats.ctHoursServerUp = Number ((utils.secondsSince (stats.whenServerStart) / 3600).toFixed (3));
-		stats.urlChatSocket = getMySocketUrl ();
+		stats.urlChatSocket = config.client.urlChatSocket;
 		if (callback !== undefined) {
 			callback (stats);
 			}
