@@ -24,7 +24,7 @@ The name of the project, total, in all its pieces, is called json.chat.
 
 2. How to <a href="https://github.com/scripting/chat/blob/master/docs/testing.md">test</a> a server.
 
-3.<a href="http://this.how/jsonchat/">Howto</a> for users.
+3. <a href="http://this.how/jsonchat/">Howto</a> for users.
 
 4. Where to <a href="https://github.com/scripting/chat/issues/new">report</a> a problem.
 
