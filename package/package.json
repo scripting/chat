@@ -1,0 +1,30 @@
+{ 
+	"name": "davechat", 
+	"description": "A fractional horsepower chat server.",
+	"author": "Dave Winer <dave@smallpicture.com>",
+	"license": "MIT",
+	"version": "0.5.5",
+	"main": "chat.js",
+	"scripts": {
+		"start": "node chat.js"
+		},
+	"repository": {
+		"type" : "git",
+		"url" : "https://github.com/scripting/chat.git"
+		},
+	"files": [
+		"chat.js"
+		],
+	"dependencies" : {
+		"daveutils": "*", 
+		"davehttp": "*",
+		"davecache": "*",
+		"davefilesystem": "*",
+		"request": "*",
+		"nodejs-websocket": "*",
+		"davetwitter": "*" 
+		}, 
+	"engines": { 
+		"node": "*"
+		}
+	}

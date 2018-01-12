@@ -1,0 +1,19 @@
+{
+	"httpPort": 1402,
+	"websocketPort": 1403,
+	"myDomain": "localhost",
+	"owner": "yourtwitterhandlegoeshere",
+	"blacklist": [],
+	"client": {
+		"flReadOnlyMode": false,
+		"productnameForDisplay": "Hello World",
+		"leadingQuestion": "What's for dinner?",
+		"editorPlaceholderText": "It's a wonderful day in the neighborhood.",
+		"urlChatServer": "http://localhost:1402/",
+		"urlChatSocket": "ws://localhost:1403/"
+	},
+	"twitter": {
+		"twitterConsumerKey": "yjdycyknahppazn6cy2wn8nws",
+		"twitterConsumerSecret": "rqk8lcymihpy72x3lfgh7epjkgfdg4wz9lqbccy9mgmeg4cmnn"
+		}
+	}
