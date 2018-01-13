@@ -444,6 +444,7 @@ function saveDataFile (f, jstruct, callback) {
 		stats.ctSockets = countOpenSockets ();
 		stats.ctHoursServerUp = Number ((utils.secondsSince (stats.whenServerStart) / 3600).toFixed (3));
 		stats.urlChatSocket = config.client.urlChatSocket;
+		stats.owner = config.owner;
 		if (callback !== undefined) {
 			callback (stats);
 			}

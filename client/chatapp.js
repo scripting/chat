@@ -44,7 +44,8 @@ function chatApp (options, callback) {
 		urlDefaultIcon: "http://static.scripting.com/larryKing/images/2012/10/16/clarus.gif", //8/21/17 by DW
 		initialEditorText: "<p><br></p>",
 		flPrefsChanged: false,
-		flJsonDisplayMode: false
+		flJsonDisplayMode: false,
+		serverStats: undefined //a copy of the stats object returned from the server
 		};
 	
 	function settingsCommand () {
@@ -633,7 +634,10 @@ function chatApp (options, callback) {
 			showEditControls ();
 			});
 		$("#idBodyEditor").blur (function (event) {
-			hideEditControls ();
+			console.log ("You clicked away from #idBodyEditor.");
+			if ($("#medium-editor-toolbar-1").css ("visibility") == "hidden") { //don't hide controls if the toolbar got the click -- 1/12/18 by DW
+				hideEditControls ();
+				}
 			});
 		$("#idBodyEditor").keyup (function (event) {
 			if (event.which == 27) { //escape key
@@ -728,10 +732,17 @@ function chatApp (options, callback) {
 				}
 			});
 		}
+	function viewSysopMenu (server) {
+		var att = (server.owner == twGetScreenName ()) ? "block" : "none";
+		$("#idSysopMenu").css ("display", att);
+		}
 	function viewServerStats () {
 		getServerStats (function (err, server) {
 			if (!err) {
 				$("#idServerStats").html ("Server: " + server.productName + " v" + server.version + ", open sockets: " + server.ctSockets + ".");
+				$("#idVersionNumber").text ("v" + server.version);
+				chatGlobals.serverStats = server; 
+				viewSysopMenu (server); //depends on server.owner
 				}
 			});
 		}

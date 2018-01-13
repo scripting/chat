@@ -28,6 +28,16 @@ function toggleJsonDisplayMode () {
 	myChatApp.toggleJsonDisplayMode ();
 	updateJsonMenuItem ();
 	}
+function rolloverCommand () {
+	confirmDialog ("Reset your chatlog, archiving the previous version?", function () {
+		myChatApp.rollover ();
+		});
+	}
+function reloadCommand () {
+	confirmDialog ("Send a reload message to all active clients?", function () {
+		myChatApp.reload ();
+		});
+	}
 function getUserInfo (callback) {
 	if (twIsTwitterConnected ()) {
 		var paramtable = {
@@ -110,7 +120,6 @@ function startup () {
 				};
 			myChatApp = new chatApp (chatOptions, function () {
 				$("#idLeadingQuestion").text (appConsts.leadingQuestion);
-				$("#idVersionNumber").text ("v" + appConsts.version);
 				$("#idMainColumn").css ("visibility", "visible");
 				updateAreaAboveTextBox ();
 				updateJsonMenuItem ();

@@ -40,13 +40,20 @@
 										<li><a href="http://emoji.codes/" target="_blank">Emoji codes..</a></li>
 										</ul>
 									</li>
+								<li class="dropdown" id="idSysopMenu" style="display: none;"> 
+									<a href="#" class="dropdown-toggle" data-toggle="dropdown">Sysop&nbsp;<b class="caret"></b></a>
+									<ul class="dropdown-menu">
+										<li><a onclick="rolloverCommand ()" >Roll over..</a></li>
+										<li><a onclick="reloadCommand ()">Reload..</a></li>
+										</ul>
+									</li>
 								<li class="dropdown" id="idDevMenu"> 
 									<a href="#" class="dropdown-toggle" data-toggle="dropdown">Dev&nbsp;<b class="caret"></b></a>
 									<ul class="dropdown-menu">
 										<li><a href="https://github.com/scripting/chat" target="_blank">On GitHub...</a></li>
 										<li><a href="https://www.npmjs.com/package/davechat" target="_blank">On NPM...</a></li>
 										<li class="divider"></li>
-										<li><a href="http://this.how/jsonChat/api.opml" target="_blank">API docs...</a></li>
+										<li><a href="http://this.how/jsonchat/" target="_blank">User docs...</a></li>
 										</ul>
 									</li>
 								</ul>
@@ -72,7 +79,30 @@
 				<div id="idPrefsDialog" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="windowTitleLabel" aria-hidden="true">
 					<div class="modal-body">
 						<div class="divDialogElements">
-							<code class="woRuntimeErrorMessage">Can't access the outline at "http://json.chat/code/settings.opml" because the remote server didn't find it.</code> 
+							<form method="POST">
+	<div class="divTabsFromOutline">
+	<div class="tabbable">
+		<ul class="nav nav-tabs" data-tabs="tabs">
+			<li class="active" ><a href="#idTag709"  data-toggle="tab">Tag</a></li>
+			<li><a href="#idOptions709"  data-toggle="tab">Options</a></li>
+			</ul>
+		<div id="my-tab-content" class="tab-content">
+			<div class="active tab-pane" id="idTag709">
+				<fieldset>
+					<div class="divPrefs">	<div class="clearfix">	<label for="hashTagForTwitter">Hashtag:</label>	<div class="input">		<input class="xlarge prefsInput" id="hashTagForTwitter" name="hashTagForTwitter" size="50" type="text" value="" placeholder="Add this at the end of tweets. Leave blank for none." />		</div>	</div>	</div>
+					</fieldset>
+						</div>
+					<div class="tab-pane" id="idOptions709">
+						<fieldset>
+							<div class="divPrefs">	<div class="clearfix">	<label for="flPostOnReturnKey"></label>	<div class="input">		<input type="checkbox" name="flPostOnReturnKey" value=xxx>&nbsp;Post automatically when you press the Return key?		</div>	</div>	</div>
+							</fieldset>
+								</div>
+							</div>
+						</div>
+					</div>
+
+	</form>
+ 
 							</div>
 						</div>
 					<div class="modal-footer">
