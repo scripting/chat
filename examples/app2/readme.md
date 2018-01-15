@@ -10,3 +10,7 @@ In json.chat, open the JavaScript console and get the values of localStorage.twO
 
 The app will post <i>Hello World</i> as if it were coming from you. 
 
+### Ideas
+
+You can change <i>urlChatServer</i> to localhost:&lt;yourport> in config.json and test it against your own server. Probably more polite than using json.chat, which is kind of a public resource. ;-)
+
