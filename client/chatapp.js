@@ -155,6 +155,11 @@ function chatApp (options, callback) {
 				}
 			return (authorlink);
 			}
+		function getCheckbox () { //1/13/18 by DW
+			var theChecked = ""; //not checked initially
+			var theCheckbox = "<input type=\"checkbox\" data-id=\"" + jstruct.id + "\" value=\"xxx\" " + theChecked + ">";
+			return ("<div class=\"divChatMsgCheckbox\">" + theCheckbox + "</div>");
+			}
 		
 		if (jstruct.text.length == 0) { //8/25/17 by DW
 			return (""); 
@@ -190,6 +195,7 @@ function chatApp (options, callback) {
 			add ("<div class=\"divJsonText\"><pre>" + jsontext + "</pre></div>");
 			}
 		else {
+			add (getCheckbox ());
 			add ("<table>"); indentlevel++;
 			add ("<tr>"); indentlevel++;
 			//icon
@@ -431,6 +437,17 @@ function chatApp (options, callback) {
 		}
 	function hideEditControls () {
 		$("#idStuffThatsHiddenWhenNotActive").css ("display", "none");
+		}
+	function visitCheckedMessages (callback) {
+		$(".divChatMsgCheckbox input").each (function () {
+			if ($(this).prop ("checked")) {
+				var id = $(this).data ("id");
+				console.log ("visitCheckedMessages: id == " + id);
+				if (callback !== undefined) {
+					callback (id);
+					}
+				}
+			});
 		}
 	function likeClick (idMessage, callback) {
 		var params = {
@@ -848,6 +865,7 @@ function chatApp (options, callback) {
 	this.prefsChanged = prefsChanged; //1/9/18 by DW
 	this.toggleJsonDisplayMode = toggleJsonDisplayMode; //1/8/18 by DW
 	this.settingsCommand = settingsCommand; //1/9/18 by DW
+	this.visitCheckedMessages = visitCheckedMessages; //1/13/18 by DW
 	this.getOptions = function () {
 		return (chatOptions);
 		};

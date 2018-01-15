@@ -1,0 +1,11 @@
+{
+	"name": "app1",
+	"description": "Bare bones demo app for davechat package.",
+	"author": "Dave Winer <dave@smallpicture.com>",
+	"license": "MIT",
+	"version": "0.4.1",
+	"dependencies" : {
+		"daveutils": "*",
+		"request": "*"
+		} 
+	}

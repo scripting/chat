@@ -1,0 +1,17 @@
+{
+    "productName": "davechat",
+    "version": "0.5.6",
+    "ctServerStarts": 38,
+    "whenServerStart": "2018-01-15T15:58:57.094Z",
+    "ctHoursServerUp": 1.648,
+    "ctHits": 21231,
+    "ctHitsThisRun": 348,
+    "ctHitsToday": 880,
+    "whenLastDayRollover": "2018-01-15T15:58:57.094Z",
+    "ctStatsSaves": 13154,
+    "backupSerialNum": 0,
+    "nextRolloverNum": 1,
+    "ctSockets": 3,
+    "urlChatSocket": "ws://json.chat:5391/",
+    "owner": "davewiner"
+}
