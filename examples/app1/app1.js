@@ -1,4 +1,4 @@
-var myVersion = "0.4.1", myProductName = "app1"; 
+var myVersion = "0.4.1", myProductName = "app1";
 
 const fs = require ("fs");
 const request = require ("request");

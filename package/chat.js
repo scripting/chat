@@ -1,4 +1,4 @@
-var myVersion = "0.5.6", myProductName = "davechat"; 
+var myVersion = "0.5.9", myProductName = "davechat";  
 
 exports.start = start;
 
@@ -248,6 +248,7 @@ function saveDataFile (f, jstruct, callback) {
 		return (-1);
 		}
 	function postToChatlog (jsontext, screenname, callback) {
+		console.log ("postToChatlog: jsontext == " + jsontext); //xxx
 		if (OKToPost (screenname, callback)) {
 			try {
 				var thePost = JSON.parse (jsontext);
@@ -438,7 +439,12 @@ function saveDataFile (f, jstruct, callback) {
 				}
 			});
 		}
-	function getStats (callback) {
+	function saveStats (callback) {
+		getStats (); //set dynamic stats
+		stats.ctStatsSaves++; 
+		fs.writeFile (config.fnameStats, utils.jsonStringify (stats), callback);
+		}
+	function getStats (callback) { //the stats we return to clients via HTTP
 		stats.productName = myProductName;
 		stats.version = myVersion;
 		stats.ctSockets = countOpenSockets ();
@@ -448,11 +454,6 @@ function saveDataFile (f, jstruct, callback) {
 		if (callback !== undefined) {
 			callback (stats);
 			}
-		}
-	function saveStats (callback) {
-		getStats (); //set dynamic stats
-		stats.ctStatsSaves++; 
-		fs.writeFile (config.fnameStats, utils.jsonStringify (stats), callback);
 		}
 //prefs
 	function getPrefs (screenname, callback) {
@@ -500,6 +501,7 @@ function handleHttpRequest (theRequest) {
 		theRequest.httpReturn (404, "text/plain", "Not found.");
 		}
 	function returnError (jstruct) {
+		console.log ("returnError: jstruct.message == " + jstruct.message);
 		theRequest.httpReturn (500, "application/json", utils.jsonStringify (jstruct));
 		}
 	function httpReturn (err, jstruct) {
@@ -530,6 +532,7 @@ function handleHttpRequest (theRequest) {
 				returnError ({message: "Can't do the thing you want because the accessToken is not valid."});    
 				}
 			else {
+				console.log ("callWithScreenname: screenname == " + screenname);
 				callback (screenname);
 				}
 			});
@@ -537,10 +540,14 @@ function handleHttpRequest (theRequest) {
 	
 	switch (theRequest.method) {
 		case "POST":
+			console.log ("handleHttpRequest: theRequest.method == " + theRequest.method + ", theRequest.lowerpath == " + theRequest.lowerpath); //xxx
 			switch (theRequest.lowerpath) {
 				case "/post": 
 					callWithScreenname (function (screenname) {
 						postToChatlog (theRequest.postBody, screenname, function (err, theResponse) {
+							if (err) { //debugging -- xxx
+								console.log ("postToChatlog callback: err == " + utils.jsonStringify (err));
+								}
 							httpReturn (err, theResponse);
 							});
 						});
@@ -681,7 +688,7 @@ function start (options, callback) {
 	copyOptions ();
 	
 	//some items in config are derived from others
-		config.twitter.myDomain = config.myDomain + ":" + config.httpPort;
+		config.twitter.myDomain = config.myDomain; //4/19/19 by DW -- no longer add the port
 		config.twitter.httpPort = config.httpPort;
 	
 	console.log ("\n" + myProductName + " v" + myVersion + ", running on port " + config.httpPort + ".\n");
