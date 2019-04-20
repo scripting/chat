@@ -65,7 +65,7 @@ body {
 	margin-bottom: 25px;
 	}
 .divStuffThatsHiddenWhenNotActive {
-	display: none;
+	visibility: hidden;
 	margin-bottom: 10px;
 	}
 

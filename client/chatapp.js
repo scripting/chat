@@ -433,10 +433,12 @@ function chatApp (options, callback) {
 		return (chatOptions.getConfigCallback ());
 		}
 	function showEditControls () {
-		$("#idStuffThatsHiddenWhenNotActive").css ("display", "block");
+		$("#idStuffThatsHiddenWhenNotActive").css ("visibility", "visible");
+		$("#idPostButton").css ("visibility", "visible");
 		}
 	function hideEditControls () {
-		$("#idStuffThatsHiddenWhenNotActive").css ("display", "none");
+		$("#idStuffThatsHiddenWhenNotActive").css ("visibility", "hidden");
+		$("#idPostButton").css ("visibility", "hidden");
 		}
 	function visitCheckedMessages (callback) {
 		$(".divChatMsgCheckbox input").each (function () {
@@ -646,7 +648,7 @@ function chatApp (options, callback) {
 			event.stopPropagation ();
 			});
 		$("#idBodyEditor").focus (function (event) {
-			$("#idStuffThatsHiddenWhenNotActive").css ("display", "block");
+			showEditControls (); //4/20/19 by DW
 			chatGlobals.flMessageNotPosted = true;
 			showEditControls ();
 			});
@@ -872,6 +874,7 @@ function chatApp (options, callback) {
 	for (var x in options) {
 		chatOptions [x] = options [x];
 		}
+	showHideEditor (); //4/20/19 by DW -- moved this to the beginning as an experiment
 	chatlogStart (function () {
 		setValuesFromConfig ();
 		viewServerStats ();
