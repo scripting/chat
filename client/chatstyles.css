@@ -303,15 +303,6 @@ body {
 	font-size: 1em;
 	top: .3em;
 	}
-.divVersionNumber {
-	font-size: 12px;
-	float: right;
-	padding: 10px;
-	}
-.iMenuCheck {
-	margin-left: -20px;
-	margin-right: 4px;
-	}
 
 .divClickableMsg {
 	cursor: pointer;
@@ -377,6 +368,28 @@ body {
 		margin: 0;
 		padding: 0;
 		font-size: 12px;
+		}
+/* 4/20/19 by DW */
+	.divMsgBeingEdited {
+		background-color: yellow;
+		}
+/* 4/25/19 by DW -- for messages posted from an RSS feed*/
+	.divRssMsgTitle {
+		font-weight: bold;
+		}
+	.divRssMsgTitle a {
+		color: inherit;
+		}
+	.divRssMsgBody {
+		margin-top: 5px;
+		}
+	.spRssPermalink {
+		font-size: 0.8em;
+		opacity: 0.5;
+		margin-left: 5px;
+		}
+	.spRssPermalink a {
+		color: purple;
 		}
 
 /* styles for phone */

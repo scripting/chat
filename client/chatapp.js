@@ -13,6 +13,7 @@ function chatApp (options, callback) {
 		urlChatSocket: undefined,
 		editorPlaceholderText: "",
 		userInfoFromTwitter: undefined, //this should come from the identity system
+		flEveryoneFollowsEnabled: false, //5/8/19 by DW -- turn the everyoneFollows feature on by setting this true
 		everyoneFollows: {"davewiner": true}, //8/23/17 by DW -- screennames of users everyone follows
 		defaultEditorButtons: ["bold", "italic", "anchor", "h4", "orderedlist", "unorderedlist", "quote"],
 		maxTweetLength: 280, //1/7/18 by DW
@@ -38,6 +39,7 @@ function chatApp (options, callback) {
 		idLastTweet: undefined,
 		flMsgBeingEdited: false, 
 		idMsgBeingEdited: undefined,
+		objMsgBeingEdited: undefined, //4/20/19 by DW
 		flSetupDynamicElements: false,
 		flMessageNotPosted: undefined,
 		whenLastAutoSave: new Date (),
@@ -156,9 +158,14 @@ function chatApp (options, callback) {
 			return (authorlink);
 			}
 		function getCheckbox () { //1/13/18 by DW
-			var theChecked = ""; //not checked initially
-			var theCheckbox = "<input type=\"checkbox\" data-id=\"" + jstruct.id + "\" value=\"xxx\" " + theChecked + ">";
-			return ("<div class=\"divChatMsgCheckbox\">" + theCheckbox + "</div>");
+			if (userIsSysop ()) {
+				var theChecked = ""; //not checked initially
+				var theCheckbox = "<input type=\"checkbox\" data-id=\"" + jstruct.id + "\" value=\"xxx\" " + theChecked + ">";
+				return ("<div class=\"divChatMsgCheckbox\">" + theCheckbox + "</div>");
+				}
+			else {
+				return ("");
+				}
 			}
 		
 		if (jstruct.text.length == 0) { //8/25/17 by DW
@@ -390,6 +397,9 @@ function chatApp (options, callback) {
 		if (theName == twGetScreenName ()) { //it's the user's own post
 			return (true);
 			}
+		if (!getBoolean (chatOptions.flEveryoneFollowsEnabled)) { //5/8/19 by DW
+			return (true);
+			}
 		if (getBoolean (chatOptions.everyoneFollows [theName])) {
 			return (true);
 			}
@@ -519,7 +529,7 @@ function chatApp (options, callback) {
 		}
 	function getEditorJstruct () {
 		var jstruct = {
-			text: encodeXml (getMainEditorText ()),
+			text: getMainEditorText (),
 			authorname: chatOptions.userInfoFromTwitter.name,
 			screenname: twGetScreenName (),
 			urlIcon: chatOptions.userInfoFromTwitter.profile_image_url,
@@ -573,8 +583,12 @@ function chatApp (options, callback) {
 		$("#idBodyEditor").blur (); //take the focus off the editor
 		}
 	function cancelEdit () {
-		chatGlobals.flMsgBeingEdited = false;
+		chatGlobals.flMsgBeingEdited = false; 
 		chatGlobals.idMsgBeingEdited = undefined;
+		if (chatGlobals.objMsgBeingEdited) { //4/20/19 by DW
+			$(chatGlobals.objMsgBeingEdited).removeClass ("divMsgBeingEdited"); //4/20/19 by DW
+			chatGlobals.objMsgBeingEdited = undefined;
+			}
 		resetEditor ();
 		}
 	function postButtonClick () {
@@ -625,7 +639,12 @@ function chatApp (options, callback) {
 			}
 		}
 	function getServerStats (callback) {
-		serverCall ("stats", undefined, false, callback);
+		serverCall ("stats", undefined, false, function (err, server) {
+			chatGlobals.serverStats = server; 
+			if (callback !== undefined) {
+				callback (err, server);
+				}
+			});
 		}
 	function setupDynamicElements () {
 		$("#idChatlogViewer *").off (); //remove all pre-existing handlers attached to the chatlog -- 1/7/18 by DW
@@ -638,6 +657,8 @@ function chatApp (options, callback) {
 			});
 		$(".divClickableMsg").on ("click", function (event) {
 			var idmsg = $(this).data ("idmsg");
+			$(this).addClass ("divMsgBeingEdited"); //4/20/19 by DW
+			chatGlobals.objMsgBeingEdited = this; //4/20/19 by DW
 			editMessage (idmsg);
 			event.stopPropagation ();
 			});
@@ -740,19 +761,24 @@ function chatApp (options, callback) {
 		}
 	function chatlogStart (callback) {
 		const whenstart = new Date ();
-		getChatlog (function (err, chatlogSubset) {
-			if (!err) {
-				console.log ("chatlogStart: " + chatlogSubset.messages.length + " messages, took " + secondsSince (whenstart) + " secs.");
-				chatGlobals.chatlog = chatlogSubset;
-				viewChatlog ();
-				if (callback !== undefined) {
-					callback ();
+		getServerStats (function () {
+			getChatlog (function (err, chatlogSubset) {
+				if (!err) {
+					console.log ("chatlogStart: " + chatlogSubset.messages.length + " messages, took " + secondsSince (whenstart) + " secs.");
+					chatGlobals.chatlog = chatlogSubset;
+					viewChatlog ();
+					if (callback !== undefined) {
+						callback ();
+						}
 					}
-				}
+				});
 			});
 		}
+	function userIsSysop () { //4/21/19 by DW
+		return (chatGlobals.serverStats.owner == twGetScreenName ());
+		}
 	function viewSysopMenu (server) {
-		var att = (server.owner == twGetScreenName ()) ? "block" : "none";
+		var att = (userIsSysop ()) ? "block" : "none";
 		$("#idSysopMenu").css ("display", att);
 		}
 	function viewServerStats () {
@@ -760,7 +786,6 @@ function chatApp (options, callback) {
 			if (!err) {
 				$("#idServerStats").html ("Server: " + server.productName + " v" + server.version + ", open sockets: " + server.ctSockets + ".");
 				$("#idVersionNumber").text ("v" + server.version);
-				chatGlobals.serverStats = server; 
 				viewSysopMenu (server); //depends on server.owner
 				}
 			});

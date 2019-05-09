@@ -38,6 +38,13 @@ function reloadCommand () {
 		myChatApp.reload ();
 		});
 	}
+function deleteCommand () { //4/26/19 by DW
+	confirmDialog ("Delete all checked messages?", function () {
+		myChatApp.visitCheckedMessages (function (idmsg) {
+			myChatApp.deleteItem (idmsg);
+			});
+		});
+	}
 function getUserInfo (callback) {
 	if (twIsTwitterConnected ()) {
 		var paramtable = {

@@ -27,3 +27,12 @@
  #idMenuProductName {
 	font-size: 40px;
 	}
+.divVersionNumber {
+	font-size: 12px;
+	float: right;
+	padding: 10px;
+	}
+.iMenuCheck {
+	margin-left: -20px;
+	margin-right: 4px;
+	}

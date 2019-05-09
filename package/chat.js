@@ -1,4 +1,4 @@
-var myVersion = "0.5.9", myProductName = "davechat";  
+var myVersion = "0.5.17", myProductName = "davechat";  
 
 exports.start = start;
 
@@ -11,6 +11,7 @@ const websocket = require ("nodejs-websocket");
 const fs = require ("fs");
 const dns = require ("dns");
 const os = require ("os");
+const AWS = require ("aws-sdk"); //5/8/19 by DW
 
 var config = {
 	httpPort: 1402,
@@ -31,6 +32,11 @@ var config = {
 		twitterConsumerKey: undefined,
 		twitterConsumerSecret: undefined
 		},
+	email: {
+		enabled: true,
+		sendFrom: "dave.winer@gmail.com",
+		sendTo: "dave.winer@gmail.com"
+		 },
 	fnameChatlog: "data/chatlog.json",
 	fnameStats: "data/stats.json",
 	userDataFolder: "data/users/",
@@ -210,6 +216,61 @@ function saveDataFile (f, jstruct, callback) {
 			callback ({message: "Can't send the message because the account is not authorized."});
 			}
 		}
+//mail -- 5/8/19 by DW
+	var ses = new AWS.SES ({
+		apiVersion: "2010-12-01",
+		region: "us-east-1"
+		});
+	function sendMail (recipient, subject, message, sender, callback) {
+		var theMail = {
+			Source: sender,
+			ReplyToAddresses: [sender],
+			ReturnPath: sender,
+			Destination: {
+				ToAddresses: [recipient]
+				},
+			Message: {
+				Body: {
+					Html: {
+						Data: message
+						},
+					Text: {
+						Data: utils.stripMarkup (message)
+						}
+					},
+				Subject: {
+					Data: subject
+					}
+				},
+			};
+		ses.sendEmail (theMail, function (err, data) { 
+			if (err) {
+				console.log ("\nsendMail: err.message == " + err.message);
+				}
+			else {
+				console.log ("\nsendMail: data == " + JSON.stringify (data, undefined, 4));
+				}
+			});
+		}
+	function sendNotificationMail (thePost) { //5/8/19 by DW
+		if (config.email.enabled) {
+			var emailtext = "";
+			function add (s) {
+				emailtext += s
+				}
+			add ("<table>");
+			add ("<tr><td>icon:</td><td><img src=\"" + thePost.urlIcon + "\"></td></tr>");
+			add ("<tr><td>screenname:</td><td>" + thePost.screenname + "</td></tr>");
+			add ("<tr><td>authorname:</td><td>" + thePost.authorname + "</td></tr>");
+			add ("<tr><td>when:</td><td>" + thePost.when + "</td></tr>");
+			add ("<tr><td>id:</td><td>" + thePost.id + "</td></tr>");
+			add ("<tr><td></td><td>" + thePost.text + "</td></tr>");
+			add ("</table>");
+			add ("<br><br><br>");
+			sendMail (config.email.sendTo, "New chat post", emailtext, config.email.sendFrom, function () {
+				});
+			}
+		}
 //chatlog
 	var theChatlog = {
 		idNextPost: 0,
@@ -252,13 +313,14 @@ function saveDataFile (f, jstruct, callback) {
 		if (OKToPost (screenname, callback)) {
 			try {
 				var thePost = JSON.parse (jsontext);
-				thePost.text = utils.decodeXml (thePost.text);
+				thePost.text = decodeURIComponent (thePost.text); //4/25/19 by DW
 				thePost.id = theChatlog.idNextPost++;
 				thePost.when = new Date ();
 				thePost.screenname = screenname;
 				theChatlog.messages.unshift (thePost);
 				chatlogChanged ();
 				notifySocketSubscribers ("update", thePost);
+				sendNotificationMail (thePost); //5/8/19 by DW
 				if (callback !== undefined) {
 					callback (undefined, thePost);
 					}
@@ -369,7 +431,6 @@ function saveDataFile (f, jstruct, callback) {
 					}
 				else {
 					console.log ("rolloverChatlog: archived chatlog == " + f);
-					theChatlog.idNextPost = 0;
 					theChatlog.messages = [];
 					statsChanged ();
 					chatlogChanged ();
@@ -554,6 +615,9 @@ function handleHttpRequest (theRequest) {
 				}
 		case "GET":
 			switch (theRequest.lowerpath) {
+				case "/":
+					returnServerHomePage ();
+					return (true); 
 				case "/version":
 					returnPlainText (myVersion);
 					return (true);
@@ -631,9 +695,6 @@ function handleHttpRequest (theRequest) {
 							});
 						});
 					return (true); 
-				case "/":
-					returnServerHomePage ();
-					return (true); 
 				}
 			break;
 		}
@@ -706,10 +767,7 @@ function start (options, callback) {
 				stats.ctHitsThisRun = 0;
 				statsChanged ();
 				setInterval (everySecond, 1000); 
-				utils.runAtTopOfMinute (function () {
-					setInterval (everyMinute, 60000); 
-					everyMinute ();
-					});
+				utils.runEveryMinute (everyMinute);
 				webSocketStartup (config.websocketPort); 
 				davecache.start (undefined, function () {
 					});

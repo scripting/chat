@@ -61,6 +61,7 @@
 									<a href="#" class="dropdown-toggle" data-toggle="dropdown">Menu&nbsp;<b class="caret"></b></a>
 									<ul class="dropdown-menu">
 										<li><a onclick="toggleJsonDisplayMode ();" id="idJsonMenuItem"></a></li>
+										<li><a href="http://guidelines.scripting.com/" target="_blank">Comment guidelines..</a></li>
 										<li><a href="http://emoji.codes/" target="_blank">Emoji codes..</a></li>
 										</ul>
 									</li>
@@ -69,6 +70,8 @@
 									<ul class="dropdown-menu">
 										<li><a onclick="rolloverCommand ()" >Roll over..</a></li>
 										<li><a onclick="reloadCommand ()">Reload..</a></li>
+										<li class="divider"></li>
+										<li><a onclick="deleteCommand ()">Delete checked msgs..</a></li>
 										</ul>
 									</li>
 								<li class="dropdown" id="idDevMenu"> 
@@ -107,16 +110,16 @@
 	<div class="divTabsFromOutline">
 	<div class="tabbable">
 		<ul class="nav nav-tabs" data-tabs="tabs">
-			<li class="active" ><a href="#idTag613"  data-toggle="tab">Tag</a></li>
-			<li><a href="#idOptions613"  data-toggle="tab">Options</a></li>
+			<li class="active" ><a href="#idTag243"  data-toggle="tab">Tag</a></li>
+			<li><a href="#idOptions243"  data-toggle="tab">Options</a></li>
 			</ul>
 		<div id="my-tab-content" class="tab-content">
-			<div class="active tab-pane" id="idTag613">
+			<div class="active tab-pane" id="idTag243">
 				<fieldset>
 					<div class="divPrefs">	<div class="clearfix">	<label for="hashTagForTwitter">Hashtag:</label>	<div class="input">		<input class="xlarge prefsInput" id="hashTagForTwitter" name="hashTagForTwitter" size="50" type="text" value="" placeholder="Add this at the end of tweets. Leave blank for none." />		</div>	</div>	</div>
 					</fieldset>
 						</div>
-					<div class="tab-pane" id="idOptions613">
+					<div class="tab-pane" id="idOptions243">
 						<fieldset>
 							<div class="divPrefs">	<div class="clearfix">	<label for="flPostOnReturnKey"></label>	<div class="input">		<input type="checkbox" name="flPostOnReturnKey" value=xxx>&nbsp;Post automatically when you press the Return key?		</div>	</div>	</div>
 							</fieldset>
@@ -155,7 +158,7 @@
 						</div>
 					<div class="divStuffThatsHiddenWhenNotActive" id="idStuffThatsHiddenWhenNotActive">
 						<div class="divPostButton">
-							<button id="idCancelButton" class="btn btnPost" type="button" style="visibility: hidden;"><i class="fa fa-close"></i> Cancel</button>
+							<button id="idCancelButton" class="btn btnPost" type="button" style="visibility: hidden;"><i class="fa fa-times"></i> Cancel</button>
 							<button id="idPostButton" class="btn btnPost" type="button" style="visibility: hidden;"><i class="fa fa-check"></i> Post</button>
 							</div>
 						<div class="divCharCount" id="idCharCount">
