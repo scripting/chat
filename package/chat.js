@@ -1,4 +1,4 @@
-var myVersion = "0.5.17", myProductName = "davechat";  
+var myVersion = "0.5.23", myProductName = "davechat";  
 
 exports.start = start;
 
@@ -42,7 +42,8 @@ var config = {
 	userDataFolder: "data/users/",
 	archiveFolder: "data/archive/",
 	fnamePrefs: "prefs.json",
-	urlServerHomePageSource: "http://scripting.com/chat/code/template.html"
+	urlServerHomePageSource: "http://scripting.com/chat/code/template.html",
+	flArchiveItems: true //5/9/19 by DW
 	};
 
 var flAtLeastOneHitInLastMinute = false;
@@ -271,6 +272,44 @@ function saveDataFile (f, jstruct, callback) {
 				});
 			}
 		}
+//saving items to a file -- 5/9/19 by DW
+	function getItemFilePath (item) {
+		var f = config.archiveFolder + utils.getDatePath (item.when) + utils.padWithZeros (item.id, 5) + ".json";
+		return (f);
+		}
+	function saveItemToFile (item, callback) { 
+		if (config.flArchiveItems) {
+			var f = getItemFilePath (item);
+			utils.sureFilePath (f, function () {
+				fs.writeFile (f, utils.jsonStringify (item), function (err) {
+					if (err) {
+						console.log ("saveItemToFile: err.message == " + err.message);
+						}
+					if (callback !== undefined) {
+						callback ();
+						}
+					});
+				});
+			}
+		else {
+			if (callback !== undefined) {
+				callback ();
+				}
+			}
+		}
+	function deleteFileItem (item, callback) {
+		var f = getItemFilePath (item);
+		console.log ("deleteFileItem: f == " + f);
+		fs.unlink (f, function (err) {
+			if (err) {
+				console.log ("deleteFileItem: err.message == " + err.message);
+				}
+			if (callback !== undefined) {
+				callback ();
+				}
+			});
+		}
+	
 //chatlog
 	var theChatlog = {
 		idNextPost: 0,
@@ -319,6 +358,7 @@ function saveDataFile (f, jstruct, callback) {
 				thePost.screenname = screenname;
 				theChatlog.messages.unshift (thePost);
 				chatlogChanged ();
+				saveItemToFile (thePost); //5/9/19 by DW
 				notifySocketSubscribers ("update", thePost);
 				sendNotificationMail (thePost); //5/8/19 by DW
 				if (callback !== undefined) {
@@ -358,6 +398,7 @@ function saveDataFile (f, jstruct, callback) {
 					if (item.screenname == screenname) {
 						item.text = theText;
 						notifySocketSubscribers ("update", item);
+						saveItemToFile (item); //5/9/19 by DW
 						if (callback !== undefined) {
 							callback (undefined, item); 
 							}
@@ -365,7 +406,7 @@ function saveDataFile (f, jstruct, callback) {
 						return;
 						}
 					else {
-						callback ({message: "Can't update because there is no message with the indicated id and author."});
+						callback ({message: "Can't update because there is no message with the indicated id and screenname."});
 						return;
 						}
 					}
@@ -410,6 +451,7 @@ function saveDataFile (f, jstruct, callback) {
 					var item = theChatlog.messages [ix];
 					item.flDeleted = true;
 					chatlogChanged ();
+					deleteFileItem (item); //5/9/19 by DW
 					notifySocketSubscribers ("deleteItem", {id: id});
 					callback (undefined, "deleted");
 					}
@@ -593,7 +635,6 @@ function handleHttpRequest (theRequest) {
 				returnError ({message: "Can't do the thing you want because the accessToken is not valid."});    
 				}
 			else {
-				console.log ("callWithScreenname: screenname == " + screenname);
 				callback (screenname);
 				}
 			});

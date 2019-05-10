@@ -3,7 +3,7 @@
 	"description": "A fractional horsepower chat server.",
 	"author": "Dave Winer <dave@smallpicture.com>",
 	"license": "MIT",
-	"version": "0.5.17",
+	"version": "0.5.23",
 	"main": "chat.js",
 	"scripts": {
 		"start": "node chat.js"
