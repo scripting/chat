@@ -17,6 +17,7 @@ function chatApp (options, callback) {
 		everyoneFollows: {"davewiner": true}, //8/23/17 by DW -- screennames of users everyone follows
 		defaultEditorButtons: ["bold", "italic", "anchor", "h4", "orderedlist", "unorderedlist", "quote"],
 		maxTweetLength: 280, //1/7/18 by DW
+		flJustViewMsg: false, //5/11/19 by DW
 		newMessageCallback: function (jstruct) {
 			},
 		updatedMessageCallback: function (jstruct) {
@@ -64,6 +65,13 @@ function chatApp (options, callback) {
 			when = jstruct.when;
 			}
 		return (new Date (when));
+		}
+	function getWhenLink (jstruct) {
+		var whenstring = getFacebookTimeString (chatGetWhen (jstruct));
+		if (jstruct.permalink !== undefined) {
+			whenstring = "<a href=\"" + jstruct.permalink + "\">" + whenstring + "</a>";
+			}
+		return (whenstring);
 		}
 	function viewChatMsg (jstruct) {
 		var htmltext = "", indentlevel = 0, flAddContainer = false;
@@ -214,7 +222,7 @@ function chatApp (options, callback) {
 				//top line
 					add ("<div class=\"divChatTopLine\">"); indentlevel++;
 					add ("<span class=\"spChatAuthorName\">" + getAuthorLink (jstruct.authorname) + "</span>");
-					add ("<span class=\"spChatWhen\" id=\"idWhen" + jstruct.serialnum + "\">" + getFacebookTimeString (chatGetWhen (jstruct)) + "</span>");
+					add ("<span class=\"spChatWhen\" id=\"idWhen" + jstruct.serialnum + "\">" + getWhenLink (jstruct) + "</span>");
 					
 					if (jstruct.idTweet !== undefined) { //9/28/16 by DW
 						var urlForTweet = "https://twitter.com/" + jstruct.screenname + "/status/" + jstruct.idTweet;
@@ -302,7 +310,7 @@ function chatApp (options, callback) {
 		}
 	function checkChatSocket () {
 		chatSocketStart (chatOptions.urlChatSocket, function (verb, s) {
-			console.log ("chatlogEverySecond: verb == " + verb);
+			console.log ("checkChatSocket: verb == " + verb);
 			switch (verb.toLowerCase ()) {
 				case "update":
 					var jstruct = JSON.parse (s);
@@ -328,6 +336,11 @@ function chatApp (options, callback) {
 						$("#idChatlogViewer").prepend (viewChatMsg (jstruct));
 						chatOptions.newMessageCallback (jstruct); //8/11/17 by DW
 						}
+					break;
+				case "stats": //5/11/19 by DW
+					chatGlobals.serverStats = JSON.parse (s);
+					viewServerStats ();
+					console.log ("checkChatSocket: chatGlobals.serverStats == " + jsonStringify (chatGlobals.serverStats));
 					break;
 				case "rollover":
 					chatlogStart ();
@@ -775,20 +788,22 @@ function chatApp (options, callback) {
 			});
 		}
 	function userIsSysop () { //4/21/19 by DW
-		return (chatGlobals.serverStats.owner == twGetScreenName ());
+		if (chatGlobals.serverStats === undefined) { //5/11/19 by DW
+			return (false);
+			}
+		else {
+			return (chatGlobals.serverStats.owner == twGetScreenName ());
+			}
 		}
 	function viewSysopMenu (server) {
 		var att = (userIsSysop ()) ? "block" : "none";
 		$("#idSysopMenu").css ("display", att);
 		}
 	function viewServerStats () {
-		getServerStats (function (err, server) {
-			if (!err) {
-				$("#idServerStats").html ("Server: " + server.productName + " v" + server.version + ", open sockets: " + server.ctSockets + ".");
-				$("#idVersionNumber").text ("v" + server.version);
-				viewSysopMenu (server); //depends on server.owner
-				}
-			});
+		var server = chatGlobals.serverStats;
+		$("#idServerStats").html ("Server: " + server.productName + " v" + server.version + ", open sockets: " + server.ctSockets + ".");
+		$("#idVersionNumber").text ("v" + server.version);
+		viewSysopMenu (server); //depends on server.owner
 		}
 	function setPostButtonText () {
 		var theText, cancelVisible;
@@ -848,12 +863,10 @@ function chatApp (options, callback) {
 		}
 	function everyMinute () {
 		var now = new Date ();
-		console.log ("\neveryMinute: " + now.toLocaleTimeString () + ", v" + getConfig ().version);
 		for (var i = chatGlobals.chatlog.messages.length - 1; i >= 0; i--) {
 			var item = chatGlobals.chatlog.messages [i];
 			$("#idWhen" + item.serialnum).text (getFacebookTimeString (chatGetWhen (item)));
 			}
-		viewServerStats ();
 		}
 	function everySecond () {
 		checkChatSocket ();
@@ -893,25 +906,30 @@ function chatApp (options, callback) {
 	this.toggleJsonDisplayMode = toggleJsonDisplayMode; //1/8/18 by DW
 	this.settingsCommand = settingsCommand; //1/9/18 by DW
 	this.visitCheckedMessages = visitCheckedMessages; //1/13/18 by DW
+	this.viewChatMsg = viewChatMsg; //5/11/19 by DW
 	this.getOptions = function () {
 		return (chatOptions);
 		};
 	for (var x in options) {
 		chatOptions [x] = options [x];
 		}
-	showHideEditor (); //4/20/19 by DW -- moved this to the beginning as an experiment
-	chatlogStart (function () {
-		setValuesFromConfig ();
-		viewServerStats ();
-		getPrefs (function () {
-			initEditor (appPrefs.savedTextArea);  
-			self.setInterval (everySecond, 1000); 
-			runAtTopOfMinute (function () {
-				self.setInterval (everyMinute, 60000); 
-				everyMinute ();
+	if (!chatOptions.flJustViewMsg) {
+		showHideEditor (); //4/20/19 by DW -- moved this to the beginning as an experiment
+		chatlogStart (function () {
+			setValuesFromConfig ();
+			getPrefs (function () {
+				initEditor (appPrefs.savedTextArea);  
+				self.setInterval (everySecond, 1000); 
+				runAtTopOfMinute (function () {
+					self.setInterval (everyMinute, 60000); 
+					everyMinute ();
+					});
+				callback ();
 				});
-			callback ();
 			});
-		});
+		}
+	else { //5/11/19 by DW
+		callback (this);
+		}
 	}
 

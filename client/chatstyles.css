@@ -14,7 +14,7 @@ body {
 .divChatlogViewer {
 	width: 560px;
 	min-height: 400px;
-	margin-top: 15px;
+	margin-top: 5px;
 	}
 .divChatMsgContainer {
 	font-family: "Ubuntu";
@@ -102,7 +102,8 @@ body {
 .divServerStats {
 	font-size: 12px;
 	line-height: 110%;
-	margin-top: 10px;
+	margin-top: 0px;
+	color: silver;
 	}
 .divPreviewSection {
 	width: 560px;
@@ -390,6 +391,11 @@ body {
 		}
 	.spRssPermalink a {
 		color: purple;
+		}
+/* 5/11/19 by DW */
+	.spChatWhen a {
+		color: inherit;
+		cursor: pointer;
 		}
 
 /* styles for phone */

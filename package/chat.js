@@ -1,4 +1,4 @@
-var myVersion = "0.5.23", myProductName = "davechat";  
+var myVersion = "0.5.28", myProductName = "davechat";  
 
 exports.start = start;
 
@@ -43,7 +43,8 @@ var config = {
 	archiveFolder: "data/archive/",
 	fnamePrefs: "prefs.json",
 	urlServerHomePageSource: "http://scripting.com/chat/code/template.html",
-	flArchiveItems: true //5/9/19 by DW
+	flArchiveItems: true, //5/9/19 by DW
+	urlStoriesTemplate: "http://scripting.com/chat/code/stories/template.html", //5/11/19 by DW
 	};
 
 var flAtLeastOneHitInLastMinute = false;
@@ -277,6 +278,9 @@ function saveDataFile (f, jstruct, callback) {
 		var f = config.archiveFolder + utils.getDatePath (item.when) + utils.padWithZeros (item.id, 5) + ".json";
 		return (f);
 		}
+	function getItemPermalink (item) {
+		return ("http://" + config.myDomain + "/story?day=" + utils.getDatePath (item.when) + "&id=" + item.id);
+		}
 	function saveItemToFile (item, callback) { 
 		if (config.flArchiveItems) {
 			var f = getItemFilePath (item);
@@ -306,6 +310,50 @@ function saveDataFile (f, jstruct, callback) {
 				}
 			if (callback !== undefined) {
 				callback ();
+				}
+			});
+		}
+	function returnStoryPage (jsontext, templatetext, callback) {
+		try {
+			var item = JSON.parse (jsontext);
+			var pagetable = {
+				jsontext: jsontext,
+				title: (item.authorname) ? item.authorname : item.screenname
+				};
+			var pagetext = utils.multipleReplaceAll (templatetext, pagetable, false, "[%", "%]");
+			callback (undefined, pagetext);
+			}
+		catch (err) {
+			callback (err);
+			}
+		}
+	function serveStory (day, id, callback) {
+		var year = utils.stringNthField (day, "/", 1);
+		var month = utils.stringNthField (day, "/", 2);
+		var day = utils.stringNthField (day, "/", 3);
+		var f = config.archiveFolder + year + "/" + month + "/" + day + "/" + utils.padWithZeros (id, 5) + ".json";
+		console.log ("serveStory: f == " + f);
+		fs.readFile (f, function (err, filedata) {
+			if (err) {
+				callback (err);
+				}
+			else {
+				request (config.urlStoriesTemplate, function (err, response, templatetext) {
+					if (err) {
+						callback (err);
+						}
+					else {
+						if (response.statusCode != 200) {
+							var myError = {
+								message: "HTTP response code == " + response.statusCode + "."
+								};
+							callback (myError);
+							}
+						else {
+							returnStoryPage (filedata, templatetext, callback);
+							}
+						}
+					});
 				}
 			});
 		}
@@ -348,7 +396,6 @@ function saveDataFile (f, jstruct, callback) {
 		return (-1);
 		}
 	function postToChatlog (jsontext, screenname, callback) {
-		console.log ("postToChatlog: jsontext == " + jsontext); //xxx
 		if (OKToPost (screenname, callback)) {
 			try {
 				var thePost = JSON.parse (jsontext);
@@ -356,6 +403,7 @@ function saveDataFile (f, jstruct, callback) {
 				thePost.id = theChatlog.idNextPost++;
 				thePost.when = new Date ();
 				thePost.screenname = screenname;
+				thePost.permalink = getItemPermalink (thePost); //5/10/19 by DW
 				theChatlog.messages.unshift (thePost);
 				chatlogChanged ();
 				saveItemToFile (thePost); //5/9/19 by DW
@@ -397,6 +445,9 @@ function saveDataFile (f, jstruct, callback) {
 				if (item.id == id) {
 					if (item.screenname == screenname) {
 						item.text = theText;
+						item.ctUpdates = (item.ctUpdates === undefined) ? 1 : item.ctUpdates++;
+						item.whenLastUpdate = now;
+						item.permalink = getItemPermalink (item);
 						notifySocketSubscribers ("update", item);
 						saveItemToFile (item); //5/9/19 by DW
 						if (callback !== undefined) {
@@ -736,6 +787,18 @@ function handleHttpRequest (theRequest) {
 							});
 						});
 					return (true); 
+				
+				case "/story": //5/10/19 by DW
+					serveStory (theRequest.params.day, theRequest.params.id, function (err, htmltext) {
+						if (err) {
+							returnError (err);
+							}
+						else {
+							returnHtml (htmltext);
+							}
+						});
+					return (true); 
+				
 				}
 			break;
 		}
@@ -759,6 +822,7 @@ function everyMinute () {
 	if (flStatsChanged) {
 		flStatsChanged = false;
 		saveStats (function () {
+			notifySocketSubscribers ("stats", stats);
 			});
 		}
 	}
