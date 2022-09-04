@@ -1,4 +1,4 @@
-var myVersion = "0.5.28", myProductName = "davechat";  
+var myVersion = "0.6.3", myProductName = "davechat";  
 
 exports.start = start;
 
@@ -269,7 +269,9 @@ function saveDataFile (f, jstruct, callback) {
 			add ("<tr><td></td><td>" + thePost.text + "</td></tr>");
 			add ("</table>");
 			add ("<br><br><br>");
-			sendMail (config.email.sendTo, "New chat post", emailtext, config.email.sendFrom, function () {
+			config.email.sendTo.split (",").forEach (function (item) { //6/14/20 by DW
+				sendMail (utils.trimWhitespace (item), "New chat post", emailtext, config.email.sendFrom, function () {
+					});
 				});
 			}
 		}
@@ -806,14 +808,27 @@ function handleHttpRequest (theRequest) {
 	return (false); //we didn't handle it
 	}
 
-function everyMinute () {
-	var now = new Date (), timestring = now.toLocaleTimeString ();
+function consoleStatusMessage () {
+	var productName = myProductName;
+	if (config.client !== undefined) {
+		if (config.client.productnameForDisplay !== undefined) {
+			productName = config.client.productnameForDisplay;
+			}
+		}
+	var now = new Date ();
+	var timestring = now.toLocaleTimeString ();
 	var ct = countOpenSockets (), countstring = ct + " open socket" + ((ct != 1) ? "s" : "");
 	if (flAtLeastOneHitInLastMinute) {
 		console.log ("");
 		flAtLeastOneHitInLastMinute = false;
 		}
-	console.log (myProductName + " v" + myVersion + ": " + timestring + ", " + countstring + ".\n");
+	console.log (productName + " v" + myVersion + ": " + timestring + ", " + countstring + ".\n");
+	}
+function everyMinute () {
+	var now = new Date ();
+	if (now.getMinutes () == 0) { //5/23/20 by DW
+		consoleStatusMessage ();
+		}
 	if (!utils.sameDay (stats.whenLastDayRollover, now)) { //date rollover
 		stats.whenLastDayRollover = now;
 		stats.ctHitsToday = 0;
@@ -872,6 +887,7 @@ function start (options, callback) {
 				stats.ctHitsThisRun = 0;
 				statsChanged ();
 				setInterval (everySecond, 1000); 
+				consoleStatusMessage ();
 				utils.runEveryMinute (everyMinute);
 				webSocketStartup (config.websocketPort); 
 				davecache.start (undefined, function () {

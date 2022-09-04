@@ -865,7 +865,7 @@ function chatApp (options, callback) {
 		var now = new Date ();
 		for (var i = chatGlobals.chatlog.messages.length - 1; i >= 0; i--) {
 			var item = chatGlobals.chatlog.messages [i];
-			$("#idWhen" + item.serialnum).text (getFacebookTimeString (chatGetWhen (item)));
+			$("#idWhen" + item.serialnum).html (getWhenLink (item));
 			}
 		}
 	function everySecond () {
@@ -920,10 +920,7 @@ function chatApp (options, callback) {
 			getPrefs (function () {
 				initEditor (appPrefs.savedTextArea);  
 				self.setInterval (everySecond, 1000); 
-				runAtTopOfMinute (function () {
-					self.setInterval (everyMinute, 60000); 
-					everyMinute ();
-					});
+				runEveryMinute (everyMinute); 
 				callback ();
 				});
 			});

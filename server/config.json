@@ -2,7 +2,7 @@
 	"httpPort": 1402,
 	"websocketPort": 1403,
 	"myDomain": "localhost",
-	"owner": "yourtwitterhandlegoeshere",
+	"owner": "yourTwitterHandleGoesHere",
 	"blacklist": [],
 	"client": {
 		"flReadOnlyMode": false,
